@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+data/
+.cache/
+.pnpm-store/
+.superpowers/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store

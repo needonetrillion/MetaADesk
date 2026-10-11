@@ -1,0 +1,25 @@
+{
+  "name": "meta-analysis-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.31.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["better-sqlite3", "esbuild"]
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:server": "pnpm --filter @meta/server dev",
+    "dev:web": "pnpm --filter @meta/web dev",
+    "build": "pnpm --filter @meta/server build && pnpm --filter @meta/web build",
+    "typecheck": "pnpm -r typecheck && pnpm typecheck:test",
+    "typecheck:test": "pnpm --filter @meta/core typecheck:test && pnpm --filter @meta/importer typecheck:test && pnpm --filter @meta/server typecheck:test",
+    "test": "node --import tsx --test packages/core/test/status.test.ts packages/importer/test/dedup.test.ts apps/server/test/services.test.ts apps/server/test/routes.test.ts"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  }
+}
