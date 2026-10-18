@@ -24,7 +24,10 @@ import { dataExtractionRoutes } from './routes/data-extraction';
 import { ensureDefaultDatabases } from './services/databases';
 import { recoverStaleConversions } from './services/documents';
 
-const serverRoot = fileURLToPath(new URL('../', import.meta.url));
+const serverRoot =
+  typeof __dirname !== 'undefined'
+    ? __dirname
+    : fileURLToPath(new URL('../', import.meta.url));
 
 const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? '127.0.0.1';
@@ -60,7 +63,9 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(dataExtractionRoutes);
 
   // 生产模式：若 web 已构建，则托管静态资源并回退到 index.html
-  const webDist = path.resolve(serverRoot, '../web/dist');
+  const webDist = process.env.WEB_DIST
+    ? path.resolve(process.env.WEB_DIST)
+    : path.resolve(serverRoot, '../web/dist');
   if (fs.existsSync(webDist)) {
     await app.register(fastifyStatic, { root: webDist });
     app.setNotFoundHandler((req, reply) => {
@@ -76,8 +81,10 @@ export async function buildApp(): Promise<FastifyInstance> {
 
 // 直接运行本文件时启动服务
 const isMain =
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  typeof __dirname !== 'undefined'
+    ? true // CJS 打包：总是作为入口运行
+    : process.argv[1] &&
+      import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
 if (isMain) {
   buildApp()
     .then((app) => app.listen({ port: PORT, host: HOST }))

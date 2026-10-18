@@ -6,10 +6,13 @@ import { drizzle } from 'drizzle-orm/better-sqlite3';
 import { SCHEMA_SQL } from './ddl';
 import * as schema from './schema';
 
-/** apps/server 目录 */
-const serverRoot = fileURLToPath(new URL('../../', import.meta.url));
+/** 数据目录（可用环境变量 META_DATA_DIR 覆盖）。
+ * 兼容 esbuild CJS 打包（__dirname）与 tsx ESM 开发（import.meta.url）。 */
+const serverRoot =
+  typeof __dirname !== 'undefined'
+    ? __dirname
+    : fileURLToPath(new URL('../../', import.meta.url));
 
-/** 数据目录（可用环境变量 META_DATA_DIR 覆盖） */
 export const DATA_DIR =
   process.env.META_DATA_DIR ?? path.resolve(serverRoot, '../../data');
 

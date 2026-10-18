@@ -15,6 +15,7 @@
     "dev:server": "pnpm --filter @meta/server dev",
     "dev:web": "pnpm --filter @meta/web dev",
     "build": "pnpm --filter @meta/server build && pnpm --filter @meta/web build",
+    "package:win": "node scripts/package.mjs",
     "typecheck": "pnpm -r typecheck && pnpm typecheck:test",
     "typecheck:test": "pnpm --filter @meta/core typecheck:test && pnpm --filter @meta/importer typecheck:test && pnpm --filter @meta/server typecheck:test",
     "test": "node --import tsx --test packages/core/test/status.test.ts packages/importer/test/dedup.test.ts apps/server/test/services.test.ts apps/server/test/routes.test.ts"

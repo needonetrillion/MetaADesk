@@ -12,6 +12,7 @@ import ResultsTab from './project/ResultsTab';
 export default function ProjectPage() {
   const { id } = useParams<{ id: string }>();
   const [name, setName] = useState('');
+  const disableExtraction = import.meta.env.VITE_DISABLE_EXTRACTION === '1';
 
   useEffect(() => {
     if (!id) return;
@@ -33,8 +34,12 @@ export default function ProjectPage() {
           { key: 'search', label: '② 检索策略', children: <StrategiesTab projectId={id} /> },
           { key: 'screen', label: '③ 初筛判断', children: <ScreeningTab projectId={id} /> },
           { key: 'fulltext', label: '④ 全文判断', children: <FulltextTab projectId={id} /> },
-          { key: 'extract', label: '⑤ 全文数据提取', children: <ExtractionTab projectId={id} /> },
-          { key: 'results', label: '⑥ 结果', children: <ResultsTab projectId={id} /> },
+          ...(disableExtraction
+            ? []
+            : [
+                { key: 'extract', label: '⑤ 全文数据提取', children: <ExtractionTab projectId={id} /> },
+                { key: 'results', label: '⑥ 结果', children: <ResultsTab projectId={id} /> },
+              ]),
         ]}
       />
     </Space>
